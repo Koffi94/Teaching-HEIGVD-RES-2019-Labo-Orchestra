@@ -105,15 +105,15 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic |
 | --- | --- |
 |Question | How can we represent the system in an **architecture diagram**, which gives information both about the Docker containers, the communication protocols and the commands? |
-| | *Insert your diagram here...* |
+| | ![](./images/diagram_task1.png) |
 |Question | Who is going to **send UDP datagrams** and **when**? |
-| | *Enter your response here...* |
+| | Musician container send UDP datagrams to Auditor container IP on port 2206 every second.<br/>He start sending just after docker run and end when the container is killed whether the Auditor container is up or not. |
 |Question | Who is going to **listen for UDP datagrams** and what should happen when a datagram is received? |
-| | *Enter your response here...* |
+| | Auditor container listens on 2206 for UDP datagrams.<br/>When he receive a dgram he must update his JSONArray according to the new informations he just got. |
 |Question | What **payload** should we put in the UDP datagrams? |
-| | *Enter your response here...* |
+| | A JSONArray containing the UID of Musician container, the instrument used and the song made. |
 |Question | What **data structures** do we need in the UDP sender and receiver? When will we update these data structures? When will we query these data structures? |
-| | *Enter your response here...* |
+| | We need to use JSON Java API to create and parse payloads.<br/>Auditor will update these data structures each time he receive a new dgram from Musician.<br/>Musician will query these data structures each time he send a dgram. |
 
 
 ## Task 2: implement a "musician" Node.js application
