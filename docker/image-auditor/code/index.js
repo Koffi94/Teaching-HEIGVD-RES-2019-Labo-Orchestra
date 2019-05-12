@@ -1,6 +1,6 @@
 // Inspired by the example station.js in 05-UdpProgramming (Olivier Liechti)
 
-// Configuration file
+// Include configuration file
 const protocol = require('./properties');
 
 // We use moment.js module to make the timestamp
@@ -11,7 +11,7 @@ const moment = require('moment');
 const dgram = require('dgram');
 
 // JSON Array for TCP Client
-const activesMusicians = []
+activesMusicians = []
 
 // Instrument's dictionary
 const instruments = new Map();
@@ -33,25 +33,25 @@ function musiciansHandler(msg) {
     newMusician = new Object();
     newMusician.uuid = musician.uuid;
     newMusician.instrument = instruments.get(musician.sound);
-    newMusician.activeSince = moment().format();
+    newMusician.activeSince = moment();
     activesMusicians.push(newMusician);
     delete newMusician;
   } else {
     activesMusicians.forEach(function (elem) {
       if (elem.uuid === musician.uuid) {
-        elem.activeSince = moment().format();
+        elem.activeSince = moment();
       }
     });
   }
-  console.log(activesMusicians);
+  //console.log(activesMusicians);
 }
 
 // Let's create a datagram socket. We will use it to listen for datagrams published in the
 // multicast group by thermometers and containing measures
 const serverUDP = dgram.createSocket('udp4');
 serverUDP.bind(protocol.PROTOCOL_PORT_UDP, function() {
-console.log("Joining multicast group");
-serverUDP.addMembership(protocol.PROTOCOL_MULTICAST_ADDRESS);
+  console.log("Joining multicast group");
+  serverUDP.addMembership(protocol.PROTOCOL_MULTICAST_ADDRESS);
 });
 
 // This call back is invoked when a new datagram has arrived.
@@ -62,8 +62,8 @@ serverUDP.on('listening', function() {
 
 serverUDP.on('message', function(msg, source) {
 //console.log("Data has arrived: " + msg + ". Source IP: " + source.address + ". Source port: " + source.port);
-console.log(JSON.parse(msg.toString()).sound);
-musiciansHandler(msg.toString());
+  console.log(JSON.parse(msg.toString()).sound);
+  musiciansHandler(msg.toString());
 });
 
 // TCP side
@@ -103,6 +103,17 @@ function handleConnection(conn) {
 }
 
 // Check Musician's lives
-var intervalID = setInterval(function () {
+function arrayRemove(array, value) {
+  return array.filter(function (elem) {
+    return elem != value;
+  });
+}
 
+var intervalID = setInterval(function () {
+  activesMusicians.forEach( function (elem, index) {
+    var diff = elem.activeSince.diff(moment());
+    if(diff < -10000) {
+      activesMusicians = arrayRemove(activesMusicians, elem);
+    }
+  });
 }, 1000);
