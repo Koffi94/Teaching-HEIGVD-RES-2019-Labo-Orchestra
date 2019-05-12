@@ -1,0 +1,20 @@
+{
+  "name": "musician",
+  "version": "1.0.0",
+  "description": "Musician App NodeJS",
+  "main": "index.js",
+  "author": "Olivier Koffi",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2"
+  },
+  "dependencies": {
+    "moment": "^2.24.0",
+    "uuid": "^3.3.2"
+  },
+  "scripts": {
+    "test": "node index.js"
+  }
+}
