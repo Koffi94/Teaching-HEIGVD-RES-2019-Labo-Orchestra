@@ -1,8 +1,16 @@
-FROM node:6
-WORKDIR /app
-COPY ./code/package.json /app
-RUN npm install
-COPY ./code/ /app
-CMD node index.js
+FROM node:4.3.1
+MAINTAINER Olivier Koffi <olivier.koffi@heig-vd.ch>
+
+#
+# When we build the image, we copy the executable jar in the image file system. 
+#
+COPY code /opt/app/
+
+
+WORKDIR /opt/app/
 EXPOSE 2205
-EXPOSE 2206
+RUN npm install
+
+
+ENTRYPOINT ["node", "/opt/app/index.js"]
+

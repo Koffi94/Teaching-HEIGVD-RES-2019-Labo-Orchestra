@@ -11,7 +11,7 @@ const moment = require('moment');
 const dgram = require('dgram');
 
 // JSON Array for TCP Client
-activesMusicians = []
+var activesMusicians = []
 
 // Instrument's dictionary
 const instruments = new Map();
@@ -23,19 +23,19 @@ instruments.set("boum-boum", "drum");
 
 // Functions
 function musiciansHandler(msg) {
-  musician = JSON.parse(msg);
+  var musician = JSON.parse(msg);
 
   var found = activesMusicians.find(function (elem) {
     return elem.uuid === musician.uuid;
   });
 
   if(typeof found === 'undefined') {
-    newMusician = new Object();
+    var newMusician = new Object();
     newMusician.uuid = musician.uuid;
     newMusician.instrument = instruments.get(musician.sound);
     newMusician.activeSince = moment();
     activesMusicians.push(newMusician);
-    delete newMusician;
+    //delete newMusician;
   } else {
     activesMusicians.forEach(function (elem) {
       if (elem.uuid === musician.uuid) {
@@ -69,6 +69,7 @@ serverUDP.on('message', function(msg, source) {
 // TCP side
 // Inspired by https://medium.com
 // We use a standard Node.js module to work with TCP
+
 var net = require('net');
 
 // Create the server TCP
@@ -85,6 +86,8 @@ function handleConnection(conn) {
   // Sending JSON array to Client
   var activesMusiciansStr = JSON.stringify(activesMusicians);
   conn.write(activesMusiciansStr);
+  conn.write('\r\n');
+  conn.end();
 
   // Display connection informations
   var remoteAddress = conn.remoteAddress + ':' + conn.remotePort;
