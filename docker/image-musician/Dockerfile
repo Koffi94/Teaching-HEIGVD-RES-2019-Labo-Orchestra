@@ -3,4 +3,4 @@ WORKDIR /app
 COPY ./code/package.json /app
 RUN npm install
 COPY ./code/ /app
-CMD node index.js
+ENTRYPOINT ["node", "index.js"]
